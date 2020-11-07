@@ -1,0 +1,100 @@
+
+{% extends 'general/general.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" media="all" type="text/css" href="{% static 'configurator/css/configurator.css' %}">
+
+
+<style>
+  .card {
+    margin: 10px 20px 10px 20px;
+    padding: 10px 10px 10px 23px;
+    cursor: pointer;
+    width: 18rem;
+  }
+
+  .card-deck {
+    align-content: flex-start;
+  }
+
+  .test {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+  }
+
+  .card-title {
+    left: 30%;
+    bottom: 5%;
+  }
+
+  .jumbotron {
+    padding: 2rem 1rem 2rem 1rem;
+    background: rgb(255, 255, 255);
+    margin-top: 2rem;
+  }
+
+  @media screen and (min-width: 0px) and (max-width: 750px){
+    .card {
+      width: calc(100% - 40px);
+    }
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 1050px){
+    .card {
+      width: calc(50% - 40px);
+    }
+  }
+
+  @media screen and (min-width: 1050px) and (max-width: 1350px){
+    .card {
+      width: calc(33% - 40px);
+    }
+  }
+
+  @media screen and (min-width: 1350px) and (max-width: 1650px){
+    .card {
+      width: calc(25% - 40px);
+    }
+  }
+
+  @media screen and (min-width: 1650px) and (max-width: 1950px){
+    .card {
+      width: calc(20% - 40px);
+    }
+  }
+</style>
+
+    <!-- <section class="best-default">
+      <div class="jumbotron">
+        <div class="card" style="align-self: center;">
+          <div class="card-header">
+            Configurator
+          </div>
+
+          <table class="table">
+            <tbody>
+                {% for brand in brands %} 
+              <tr>
+                <td scope="row"><img src="{{ brand.logo.url }}" style="height: 25px;">    <a href="{{ brand.name }}">{{ brand.name }}</a></td>
+                <td></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section> -->
+
+    <div class="jumbotron">
+      <div class="test">
+        {% for brand in brands %}
+        <div class="card" onclick="location.href='{{ brand.name }}'">
+          <img class="card-img-top" src="{{ brand.logo.url }}" style="width: 240px;" alt="{{ brandname.name }}">
+            <h5 class="card-title">{{ brand.name }}</h5>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+{% endblock %}

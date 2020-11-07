@@ -1,0 +1,38 @@
+{% extends 'general/general.html' %}
+{% load static %}
+{% block content %}
+
+<div id="accordion">
+  {% for model in models %}
+  <div class="card">
+    <div class="card-header" id="{{ model }}">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#{{ model }}1" aria-expanded="false" aria-controls="{{ model }}1">
+          <h2 style="position: relative;">{{ model.name }}</h2><img src="{{ model.image.url }}" style="height: 200px;">
+        </button>
+      </h5>
+    </div>
+    <div id="{{ model }}1" class="collapse" aria-labelledby="{{ model }}1" data-parent="#accordion">
+      <div class="card-body">
+        <div class="card-deck">
+          {% for modelversion in modelversions %}
+            {% if modelversion.model.name == model.name %}
+            <a href="selected={{ modelversion.name }}">
+              <div class="card" style="max-width: 18rem;">
+                <img class="card-img-top" src="{{ modelversion.image.url }}" alt="Card image cap">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ modelversion.name }}</h5>
+                  </div>
+              </div>
+            </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+{% endblock %}

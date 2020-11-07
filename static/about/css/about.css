@@ -1,0 +1,15 @@
+html,
+body { /* parent */
+    background-color: rgb(240, 240, 240); margin: 0;
+    width: 100%; height: 100%;
+}
+
+
+.section-default {
+    width: 100%;
+    background: rgb(240, 240, 240);
+    position: relative;
+    text-align: center;
+    height: 500px;
+    color: rgb(0, 0, 0);
+  }
