@@ -58,4 +58,39 @@ def register(request):
     return render(request, 'register.html')
         
 
+def profile_update(request):
 
+    response = {
+        "status":"success"
+    }
+    profile = request.user.profile
+
+    profile.current_moods['happy']=50;
+
+    emotions = [
+        "happy",
+        "hopeful",
+        "adventure",
+        "chill",
+        "dreamy",
+        "sad"
+    ]
+    print(request.POST['current[happy]'])
+    for i in range(6):
+        value = int(profile.current_moods[emotions[i]])
+        value += int(request.POST[f"current[{emotions[i]}]"]) * 10 
+        print(int(request.POST[f"current[{emotions[i]}]"]))
+        profile.current_moods[emotions[i]] = str(value)
+    
+    for i in range(6):
+        value = int(profile.goal_moods[emotions[i]])
+        value += int(request.POST[f"goal[{emotions[i]}]"]) * 10 
+        print(int(request.POST[f"goal[{emotions[i]}]"]))
+        profile.goal_moods[emotions[i]] = str(value)
+
+    profile.save()
+    print(request.POST)
+
+
+    
+    return JsonResponse(response)
