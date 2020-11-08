@@ -1,4 +1,8 @@
 jQuery(function() {
+
+    $('#get_city').on("click", function(){
+        getCoordintes(); 
+    })
     emotions = [
         "happy",
         "hopeful",
@@ -101,7 +105,7 @@ jQuery(function() {
                 $("#error").show();
                 $("#error").text("Invalid credentials");
               } else {
-                window.location.reload()
+                // window.location.reload()
               }
           });
         
@@ -109,13 +113,68 @@ jQuery(function() {
     })
     
 
-    // $.ajax({
-    //     method: 'POST',
-    //     url: $('#login_form').attr("action"),
-        
-    // }).done(function(data) {
-    //     console.log(`Successful request. Fetched data ${data}`);
-    // }).fail(function(jqXHR, textStatus) {
-    //     alert(`Request failed: ${textStatus}`);
-    // });
 })
+
+function getCoordintes() { 
+    var options = { 
+        enableHighAccuracy: true, 
+        timeout: 5000, 
+        maximumAge: 0 
+    }; 
+  
+    function success(pos) { 
+        var crd = pos.coords; 
+        var lat = crd.latitude.toString(); 
+        var lng = crd.longitude.toString(); 
+        var coordinates = [lat, lng]; 
+        console.log(`Latitude: ${lat}, Longitude: ${lng}`); 
+        getCity(coordinates); 
+        return; 
+  
+    } 
+  
+    function error(err) { 
+        console.warn(`ERROR(${err.code}): ${err.message}`); 
+    } 
+  
+    navigator.geolocation.getCurrentPosition(success, error, options); 
+} 
+  
+// Step 2: Get city name 
+function getCity(coordinates) { 
+    var xhr = new XMLHttpRequest(); 
+    var lat = coordinates[0]; 
+    var lng = coordinates[1]; 
+  
+    // Paste your LocationIQ token below. 
+    xhr.open('GET', "https://us1.locationiq.com/v1/reverse.php?key=pk.b09009f32c0ef71aac3476b5a5849b3f&lat=" + 
+    lat + "&lon=" + lng + "&format=json", true); 
+    xhr.send(); 
+    xhr.onreadystatechange = processRequest; 
+    xhr.addEventListener("readystatechange", processRequest, false); 
+  
+    function processRequest(e) { 
+        if (xhr.readyState == 4 && xhr.status == 200) { 
+            var response = JSON.parse(xhr.responseText); 
+            var city = response.address.city;
+            console.log(city); 
+            const csrftoken = Cookies.get('csrftoken');
+            dict = {
+                'city' : city
+            }
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                  xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+              });
+               $.ajax({
+                  type: 'POST',
+                  url: $('#get_city').attr("action"),
+                  data: dict,
+              }).done(function(data) {
+                    location.reload();
+              });
+            return; 
+        } 
+    } 
+} 
