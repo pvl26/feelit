@@ -25,6 +25,8 @@ urlpatterns = [
     url(r'^$', views.homepage, name='homepage'),
     url(r'^', include('apps.accounts.urls')),
     url(r'^despre_noi/', views.about, name='aboutpage'),
+    url(r'^posts/', views.posts, name='posts'),
+    url(r'^avatarphoto/', views.save_person, name='avatarphoto'),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
