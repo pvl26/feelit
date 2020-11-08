@@ -1,5 +1,6 @@
 from django import  forms
 from .models import Profile
+from .models import Article
 
 class ProfileForm(forms.ModelForm):
     class Meta:
@@ -13,3 +14,8 @@ class ProfileForm(forms.ModelForm):
         labels = {
             'full_name' : 'Full Name'
         }
+
+class ArticleForm(forms.ModelForm):
+     class Meta:
+        model = Article
+        fields = ['title', 'description','content', 'emotions']

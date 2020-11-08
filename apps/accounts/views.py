@@ -3,8 +3,8 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .forms import ProfileForm
-from .models import Profile
+from .forms import ProfileForm, ArticleForm
+from .models import Profile, Article
 import re
 import requests
 
@@ -126,7 +126,7 @@ def create_profile(request):
             if profile.user_id is None:
                 profile.user_id = request.user.id
                 profile.save()
-            return render(request, 'profile.html')
+            return redirect('profile')
     
     else:
         form = ProfileForm()
@@ -134,3 +134,36 @@ def create_profile(request):
         return render(request, 'create_profile.html', context={
             'form':form
         })
+
+
+def  user_posts(request, username=None):
+    return render(request, 'user_posts.html', context={
+        'username' : username
+    })
+
+def create_post(request):
+    print("HERE")
+    if request.method == 'POST':
+        form = ArticleForm(request.POST)
+        if form.is_valid():
+            profile = request.user.profile
+            article = form.save(commit=False)
+            if article.user_id is None:
+                article.user_id = request.user.id
+                article.save()
+                profile.articles.append(article)
+                profile.save()
+                return redirect('user_posts', request.user.username)
+
+    form = ArticleForm()
+    
+
+    return render(request, 'create_post.html', context = {
+        'form' : form
+    })
+
+def read(request, id):
+    article = Article.objects.get(pk=id)
+    return render(request, 'read.html', context={
+        'article' : article
+    })

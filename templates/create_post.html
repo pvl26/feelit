@@ -1,0 +1,17 @@
+{% extends 'general/general.html' %}
+{% block content %}
+{%load static %}
+
+<div class="container">
+    <div class="row" id="row_style">
+        <h4 class="text-xs-center">Write something new</h4>
+        <form action="{% url 'create_post' %}" method="POST">
+        {% csrf_token %}
+           {{form.as_p}}
+        <input type="submit" value="Submit">
+    </form>
+    </div>
+</div>
+
+
+{% endblock %}

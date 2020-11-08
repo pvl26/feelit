@@ -3,6 +3,7 @@ jQuery(function() {
     $('#get_city').on("click", function(){
         getCoordintes(); 
     })
+
     emotions = [
         "happy",
         "hopeful",

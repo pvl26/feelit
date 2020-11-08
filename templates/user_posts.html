@@ -1,0 +1,27 @@
+{% extends 'general/general.html' %}
+{% block content %}
+{%load static %}
+
+<div class="jumbotron">
+    <div class="container">
+        <h6>these are {{username}}'s posts </h6>
+        <a href="{% url 'create_post' %}" class="btn btn-primary">Create New Post</a>
+    </div>
+    <div class="container"><p></p></div>
+    <div class="container">
+    {% for post in user.profile.articles %}
+    <div class="card">
+        <h5 class="card-header">{{post.title}}</h5>
+        <div class="card-body">
+          <h5 class="card-title">{{post.description}}</h5>
+          <p class="card-text">{{post.content}}</p>
+          <a href="" class="btn btn-primary">View article</a>
+        </div>
+      </div>
+    {% endfor %}
+    </div>
+</div>
+
+
+
+{% endblock %}

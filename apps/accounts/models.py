@@ -24,6 +24,7 @@ class Profile(models.Model):
     instagram = models.CharField(max_length=100, default=None, blank=True)
     facebook = models.CharField(max_length=100, default=None, blank=True)
     description = models.TextField(default="About Me")
+    articles = []
 
 
     def __str__(self):
@@ -36,3 +37,11 @@ class Person(models.Model):
 
     def __unicode__(self):
         return self.name
+
+
+class Article(models.Model):
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    description = models.CharField(max_length=100, blank = True)
+    emotions = models.JSONField(default=default_moods)
+    content = models.TextField()
