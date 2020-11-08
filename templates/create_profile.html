@@ -1,0 +1,17 @@
+
+  {% extends 'general/general.html' %}
+  {% load static %}
+  {% block content %}
+  <div class="card">
+    <h5 class="card-header">About You</h5>
+    <div class="card-body">
+      <h5 class="card-title">What you want to share about yourself</h5>
+        <form class="card-text center" action="" method="post" enctype='multipart/form-data'>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+  </div>
+
+  {% endblock %}

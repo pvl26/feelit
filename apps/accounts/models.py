@@ -13,15 +13,16 @@ def default_moods():
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=100, default=None, blank=True)
     image = models.ImageField(default='default.jpeg', upload_to='profile_pics')
     current_moods = models.JSONField(default=default_moods)
     goal_moods = models.JSONField(default=default_moods)
-    email = models.EmailField(default=None);
-    phone = models.CharField(max_length=10, default=None)
-    website = models.CharField(max_length=100, default=None)
-    twitter = models.CharField(max_length=100, default=None)
-    instagram = models.CharField(max_length=100, default=None)
-    facebook = models.CharField(max_length=100, default=None)
+    email = models.EmailField(default=None, blank=True)
+    phone = models.CharField(max_length=10, default=None, blank=True)
+    website = models.CharField(max_length=100, default=None, blank=True)
+    twitter = models.CharField(max_length=100, default=None, blank=True)
+    instagram = models.CharField(max_length=100, default=None, blank=True)
+    facebook = models.CharField(max_length=100, default=None, blank=True)
     description = models.TextField(default="About Me")
 
 

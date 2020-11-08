@@ -3,17 +3,19 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from .forms import ProfileForm
+from .models import Profile
 import re
+import requests
 
 def login_view(request):
     username = request.POST.get('username')
-    password = request.POST.get('pwd')
     response = {}
     try:
         user = User.objects.get(username=username)
         login(request, user)
         response["status"] = "success"
-    except User.DoesNotExist:
+    except user.DoesNotExist:
         response["status"] = "fail"
     
     return JsonResponse(response)
@@ -22,9 +24,31 @@ def logout_view(request):
     logout(request)
     return redirect('homepage')
 
+city = None
 def profile(request):
+    url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid=d5922c09ab547a2a5de23d7ae5e51f2b'
+    global city
+
+    if not city:
+        city = "Bucharest"
+        
+    if request.is_ajax():
+        lst = request.POST.getlist('city')
+        if lst:
+            city = lst[0]
+
+    city_weather = requests.get(url.format(city)).json() 
+    weather = {
+        'city' : city,
+        'temperature' : city_weather['main']['temp'],
+        'description' : city_weather['weather'][0]['description'],
+        'icon' : city_weather['weather'][0]['icon']
+    }
+
     if request.user.is_authenticated:
-        return render(request, 'profile.html')
+        return render(request, 'profile.html', context = {
+            'weather' : weather
+        })
     return redirect('homepage')
 
 
@@ -52,8 +76,9 @@ def register(request):
                     return render(request, 'register.html', {'error' : 'Password mismatch'})
 
                 user  = User.objects.create(username=username, email=email, password=password)
+                user.profile = Profile()
                 login(request, user)
-                return render(request, 'homepage.html')
+                return redirect('create_profile')
     
     return render(request, 'register.html')
         
@@ -64,8 +89,6 @@ def profile_update(request):
         "status":"success"
     }
     profile = request.user.profile
-
-    profile.current_moods['happy']=50;
 
     emotions = [
         "happy",
@@ -94,3 +117,20 @@ def profile_update(request):
 
     
     return JsonResponse(response)
+
+def create_profile(request):
+    if request.method == "POST":
+        form = ProfileForm(request.POST)
+        if form.is_valid():
+            profile = form.save(commit=False)
+            if profile.user_id is None:
+                profile.user_id = request.user.id
+                profile.save()
+            return render(request, 'profile.html')
+    
+    else:
+        form = ProfileForm()
+        print("here")
+        return render(request, 'create_profile.html', context={
+            'form':form
+        })
