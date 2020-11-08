@@ -1,0 +1,104 @@
+
+  {% extends 'general/general.html' %}
+  {% load static %}
+  {% block content %}
+  <!-- slideshow section -->
+  <!-- <script type="text/javascript" src="https://unpkg.com/webcam-easy/dist/webcam-easy.min.js"></script> -->
+  <link rel="stylesheet" media="all" type="text/css" href="{% static 'homepage/css/homepage.css' %}">
+  
+  <style>
+    #container {
+      margin: 0px auto;
+      width: 500px;
+      height: 700px;
+      /* border: 10px #333 solid; */
+    }
+    #videoElement {
+      width: 500px;
+      height: 375px;
+      background-color: rgb(190, 190, 190);
+    }
+    </style>
+    </head>
+     
+    <body>
+      
+    <div id="container">
+      <form method="POST" enctype="multipart/form-data" id="imageForm"> 
+        {% csrf_token %} 
+        {{ form.as_p }} 
+      <video autoplay="true" id="videoElement"></video>
+      <button id="snap">Take Photo</button>
+      <canvas id="canvas" width="500" height="375" hidden></canvas>
+      <!-- <input type="submit" value="Submit">  -->
+      </form>
+    </div>
+    <script>
+        var video = document.querySelector("#videoElement");
+
+        if (navigator.mediaDevices.getUserMedia) {
+          navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+              video.srcObject = stream;
+            })
+            .catch(function (err0r) {
+              console.log("Something went wrong!");
+            });
+        }
+
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        var video = document.getElementById('videoElement');
+
+        document.getElementById("snap").addEventListener("click", function() {
+          context.drawImage(video, 0, 0, 500, 375);
+          var canvasData = canvas.toDataURL("image/jpg");
+          console.log(canvasData)
+          // var img = new Image();
+          // img.src= canvasData;
+          // var fileBlob = dataURItoBlob(img.src);
+
+          // console.log(fileBlob)
+          // var imageFile = new File([fileBlob], "photo.png", {
+          //   type: "image/png",
+          // });
+          // console.log(imageFile);
+
+          // var imageFile = blobToFile(fileBlob, "photo.png");
+          // document.body.appendChild(file);
+
+          
+          document.getElementById("id_image").value = imageFile;
+          document.getElementById("imageForm").submit();
+        });
+
+        function dataURItoBlob(dataURI) {
+          // convert base64/URLEncoded data component to raw binary data held in a string
+          var byteString;
+          if (dataURI.split(',')[0].indexOf('base64') >= 0)
+              byteString = atob(dataURI.split(',')[1]);
+          else
+              byteString = unescape(dataURI.split(',')[1]);
+          // separate out the mime component
+          var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+          // write the bytes of the string to a typed array
+          var ia = new Uint8Array(byteString.length);
+          for (var i = 0; i < byteString.length; i++) {
+              ia[i] = byteString.charCodeAt(i);
+          }
+          return new Blob([ia], {type:mimeString});
+        }
+
+        function blobToFile(theBlob, fileName){
+            //A Blob() is almost a File() - it's just missing the two properties below which we will add
+            theBlob.lastModifiedDate = new Date();
+            theBlob.name = fileName;
+            return theBlob;
+        }
+    </script>
+    </body>
+</div>
+
+
+{% endblock %}
+

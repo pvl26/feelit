@@ -12,3 +12,8 @@ class Profile(models.Model):
 
 
 
+class Person(models.Model):
+    avatar = models.ImageField("avatar", upload_to="avatars")
+
+    def __unicode__(self):
+        return self.name
