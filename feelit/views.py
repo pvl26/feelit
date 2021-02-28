@@ -45,7 +45,12 @@ def faceial_emotion_recognition(path):
         else:
             cv2.rectangle(image, (x,y), (x+w, y+h), (255,0,0), 2)
 
-    return emotion_prediction[0]
+    try:
+        emotion_prediction[0] 
+    except:
+        return 4
+    else:
+        return emotion_prediction[0] 
 
 @csrf_exempt
 def save_person(request):
@@ -69,7 +74,9 @@ def save_person(request):
         response = {"id": person.id,
             "avatar": person.avatar.url}
         
-        print(faceial_emotion)
+        # print(faceial_emotion)
+        emotions = ["afraid", "angry", "disgusted", "happy", "neutral", "sad", "surprised"]
+        print(emotions[faceial_emotion])
         
         return render(request, 'succes.html', {
             'facial_emotion': faceial_emotion

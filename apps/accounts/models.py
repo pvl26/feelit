@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django_mysql.models import ListCharField
 
 # Create your models here.
 def default_moods():
@@ -40,7 +41,7 @@ class Person(models.Model):
 
 
 class Article(models.Model):
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=100, blank = True)
     emotions = models.JSONField(default=default_moods)

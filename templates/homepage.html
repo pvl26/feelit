@@ -10,22 +10,54 @@
     #container {
       margin: 0px auto;
       width: 500px;
-      height: 700px;
+      max-height: 600px;
+      height: 100%;
+      margin-top: 50px;
+      margin-bottom: 50px;
       /* border: 10px #333 solid; */
     }
     #videoElement {
       width: 500px;
       height: 375px;
-      background-color: rgb(190, 190, 190);
+      border-radius: 30px;
+      border: 3px solid rgba(238, 238, 238, 0.432);
+      background-image: url("{% static 'homepage/media/gummy-vintage-camera.png' %}");
+      background-color: seashell;
     }
+
+    .btn {
+      margin-top: 20px;
+      border: 3px solid rgba(238, 238, 238, 0.432);
+      border-radius: 30px;
+      left: 50%;
+      /* margin: auto; */
+    }
+
+    @media screen and (min-width: 0px) and (max-width: 500px){
+      #container {
+        max-width: calc(100% - 5px);
+        margin: 5px;
+        max-height: 450px;
+      }
+
+      #videoElement {
+        max-width: calc(100% - 5px);
+      background-image: url("{% static 'homepage/media/gummy-vintage-camera_small.png' %}");
+      }
+    }
+
+
     </style>
     </head>
      
     <body>
-      
     <div id="container">
       <video autoplay="true" id="videoElement"></video>
-      <button id="snap">Take Photo</button>
+      <div class="row">
+        <div class="col text-center">
+          <button id="snap" class="btn">Take Photo</button>
+        </div>
+      </div>
       <canvas id="canvas" width="500" height="375" hidden></canvas>
     </div>
     <script>
@@ -49,70 +81,16 @@
           context.drawImage(video, 0, 0, 500, 375);
           var canvasData = canvas.toDataURL("image/jpg");
 
-
-          // console.log(canvasData)
-
             const dataToSend = JSON.stringify({"avatar":{"name":"person.png", "file":canvasData.substring(22,canvasData.length), "content_type":"img/png"}});
-            // console.log(dataToSend);
             fetch("avatarphoto/", {
                 method: "post",
                 headers: { "Content-Type": "application/json" },
                 body: dataToSend
             })
-                // .then(resp => {
-                //     if (resp.status === 200) {
-                //         console.log(resp.json());
-                //         return resp.json()
-                //     } else {
-                //         console.log("Status: " + resp.status)
-                //         return Promise.reject("server")
-                //     }
-                // })
-                // .catch(err => {
-                //     if (err === "server") return
-                //     console.log(err)
-                // })
-          // var img = new Image();
-          // img.src= canvasData;
-          // var fileBlob = dataURItoBlob(img.src);
-
-          // console.log(fileBlob)
-          // var imageFile = new File([fileBlob], "photo.png", {
-          //   type: "image/png",
-          // });
-          // console.log(imageFile);
-
-          // var imageFile = blobToFile(fileBlob, "photo.png");
-          // document.body.appendChild(file);
-
-          
-          // document.getElementById("id_image").value = imageFile;
-          // document.getElementById("imageForm").submit();
+                
         });
 
-        // function dataURItoBlob(dataURI) {
-        //   // convert base64/URLEncoded data component to raw binary data held in a string
-        //   var byteString;
-        //   if (dataURI.split(',')[0].indexOf('base64') >= 0)
-        //       byteString = atob(dataURI.split(',')[1]);
-        //   else
-        //       byteString = unescape(dataURI.split(',')[1]);
-        //   // separate out the mime component
-        //   var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-        //   // write the bytes of the string to a typed array
-        //   var ia = new Uint8Array(byteString.length);
-        //   for (var i = 0; i < byteString.length; i++) {
-        //       ia[i] = byteString.charCodeAt(i);
-        //   }
-        //   return new Blob([ia], {type:mimeString});
-        // }
-
-        // function blobToFile(theBlob, fileName){
-        //     //A Blob() is almost a File() - it's just missing the two properties below which we will add
-        //     theBlob.lastModifiedDate = new Date();
-        //     theBlob.name = fileName;
-        //     return theBlob;
-        // }
+        
     </script>
     </body>
 </div>
